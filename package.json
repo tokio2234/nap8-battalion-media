@@ -5,10 +5,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "concurrently -k -n site,cms -c cyan,yellow \"astro dev\" \"cross-env PORT=8081 decap-server\"",
     "build": "astro build",
     "preview": "astro preview",
-    "cms": "decap-server",
     "placeholders": "node scripts/generate-placeholders.mjs"
   },
   "dependencies": {
@@ -21,6 +20,8 @@
     "tailwindcss": "^4.1.0"
   },
   "devDependencies": {
+    "concurrently": "^10.0.3",
+    "cross-env": "^10.1.0",
     "decap-server": "^3.2.0"
   }
 }

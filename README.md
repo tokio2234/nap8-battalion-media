@@ -19,14 +19,10 @@ npm install        # first time only
 npm run dev        # → http://localhost:4321
 ```
 
-To use the CMS locally (writes posts straight into your local git folder,
-no login needed), open a **second terminal** and run:
-
-```bash
-npm run cms
-```
-
-then visit <http://localhost:4321/admin/>.
+`npm run dev` starts both the site and the local CMS backend, so the admin
+panel at <http://localhost:4321/admin/> works immediately — click **Login**
+(no password needed locally; posts and photos are written straight into your
+local git folder).
 
 Other commands:
 
@@ -71,7 +67,7 @@ Other commands:
 ## 3. Add a new post via `/admin` (normal way)
 
 1. Go to `https://YOUR-SITE.netlify.app/admin/` and log in
-   (or `http://localhost:4321/admin/` with `npm run cms` running).
+   (or `http://localhost:4321/admin/` while `npm run dev` is running).
 2. **Posts → New Post.**
 3. Fill in the fields — every post uses the same locked model:
    - **Title**, **Date**, **Category** (events / school / culture)
