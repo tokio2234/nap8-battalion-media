@@ -1,0 +1,52 @@
+---
+/**
+ * Site header. On the landing page it floats transparently over the hero;
+ * everywhere else it sits in the normal flow with a hairline border.
+ */
+import { SITE, CATEGORIES, CATEGORY_SLUGS } from '../config/site';
+
+interface Props {
+  transparent?: boolean;
+}
+const { transparent = false } = Astro.props;
+
+const links = [
+  ...CATEGORY_SLUGS.map((slug) => ({ href: `/${slug}/`, label: CATEGORIES[slug].name })),
+  { href: '/gallery/', label: 'Gallery' },
+  { href: '/about/', label: 'About' },
+];
+
+const currentPath = Astro.url.pathname;
+const isActive = (href: string) => currentPath === href || currentPath.startsWith(href);
+---
+
+<header
+  class={transparent
+    ? 'absolute inset-x-0 top-0 z-20'
+    : 'border-b border-line bg-ink'}
+>
+  <div class="mx-auto flex max-w-6xl flex-wrap items-baseline justify-between gap-x-8 gap-y-2 px-5 py-5">
+    <a href="/" class="font-serif text-lg tracking-wide text-paper hover:text-accent-bright">
+      {SITE.shortTitle}
+    </a>
+    <nav aria-label="Main navigation">
+      <ul class="flex flex-wrap gap-x-5 gap-y-1 text-[0.72rem] uppercase tracking-[0.18em]">
+        {
+          links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                aria-current={isActive(link.href) ? 'page' : undefined}
+                class={`transition-colors hover:text-accent-bright ${
+                  isActive(link.href) ? 'text-accent-bright' : 'text-paper/75'
+                }`}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

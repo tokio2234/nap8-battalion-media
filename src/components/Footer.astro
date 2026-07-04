@@ -1,0 +1,63 @@
+---
+/**
+ * Site footer — doubles as section 5 of the landing page.
+ * Left: about/gallery/contact. Center: location. Right: social links.
+ */
+import { SITE } from '../config/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-line">
+  <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 text-sm md:grid-cols-3">
+    <div class="space-y-3">
+      <a href="/about/" class="block w-fit text-paper/80 hover:text-accent-bright">About the battalion</a>
+      <a href="/gallery/" class="block w-fit text-paper/80 hover:text-accent-bright">Photo gallery</a>
+      <a href={`mailto:${SITE.contactEmail}`} class="block w-fit text-paper/80 hover:text-accent-bright">
+        {SITE.contactEmail}
+      </a>
+    </div>
+
+    <div class="flex items-start gap-2 text-paper/80 md:justify-center">
+      <svg
+        class="mt-0.5 h-4 w-4 shrink-0 text-accent-bright"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+        <circle cx="12" cy="10" r="3"></circle>
+      </svg>
+      <span>{SITE.location}</span>
+    </div>
+
+    <div class="space-y-3 md:text-right">
+      {
+        SITE.social.length > 0 ? (
+          SITE.social.map((s) => (
+            <a
+              href={s.url}
+              class="block w-fit text-paper/80 hover:text-accent-bright md:ml-auto"
+              rel="noopener"
+            >
+              {s.label}
+            </a>
+          ))
+        ) : (
+          <span class="text-muted">&nbsp;</span>
+        )
+      }
+    </div>
+  </div>
+
+  <div class="border-t border-line">
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-5 py-5 text-xs text-muted">
+      <span>© {year} {SITE.shortTitle}</span>
+      <span>Built with care in Nagaland</span>
+    </div>
+  </div>
+</footer>

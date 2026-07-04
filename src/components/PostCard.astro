@@ -1,0 +1,38 @@
+---
+/**
+ * Post card used on category pages, year archives, and "More from …" blocks.
+ * Cover photo (3:2), title, date, first line of the story.
+ */
+import { Picture } from 'astro:assets';
+import { excerpt, formatDate, postUrl, type Post } from '../lib/posts';
+
+interface Props {
+  post: Post;
+}
+const { post } = Astro.props;
+---
+
+<article data-reveal>
+  <a href={postUrl(post)} class="group block">
+    <div class="overflow-hidden bg-panel">
+      <Picture
+        src={post.data.cover_photo}
+        alt={post.data.cover_alt}
+        formats={['webp']}
+        fallbackFormat="jpg"
+        widths={[480, 800, 1100]}
+        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+        class="aspect-[3/2] w-full object-cover motion-safe:transition-transform motion-safe:duration-700 group-hover:scale-[1.04]"
+      />
+    </div>
+    <h3 class="mt-4 font-serif text-xl leading-snug group-hover:text-accent-bright">
+      {post.data.title}
+    </h3>
+    <p class="mt-1.5 text-xs uppercase tracking-[0.15em] text-muted">
+      {formatDate(post.data.date)}
+    </p>
+    <p class="mt-2.5 line-clamp-2 text-sm leading-relaxed text-paper/70">
+      {excerpt(post, 140)}
+    </p>
+  </a>
+</article>

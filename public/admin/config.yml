@@ -1,0 +1,81 @@
+# Decap CMS configuration — the admin panel at /admin reads this file.
+#
+# Auth in production: Netlify Identity + Git Gateway (see README for setup).
+# Auth locally: run `npm run cms` alongside `npm run dev` and /admin will
+# talk to your local git repo directly, no login needed.
+
+backend:
+  name: git-gateway
+  branch: main
+
+# When decap-server (npm run cms) is running on localhost, the CMS writes
+# straight to the local repo. This flag is ignored in production.
+local_backend: true
+
+# Uploaded images land in src/assets/uploads/ so Astro can optimize them
+# at build time. The public_folder path is relative to a post file in
+# src/content/posts/, which is what gets written into the frontmatter.
+media_folder: "src/assets/uploads"
+public_folder: "../../assets/uploads"
+
+collections:
+  - name: posts
+    label: Posts
+    label_singular: Post
+    folder: "src/content/posts"
+    create: true
+    slug: "{{slug}}"
+    sortable_fields: [date, title]
+    fields:
+      - { label: Title, name: title, widget: string }
+      - {
+          label: Date,
+          name: date,
+          widget: datetime,
+          format: "YYYY-MM-DD",
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+          picker_utc: true,
+        }
+      - {
+          label: Category,
+          name: category,
+          widget: select,
+          options: [events, school, culture],
+        }
+      - { label: Location, name: location, widget: string, required: false }
+      - {
+          label: Cover photo,
+          name: cover_photo,
+          widget: image,
+          hint: "Landscape orientation. Shown on cards, the gallery, and the post header.",
+        }
+      - {
+          label: Cover photo alt text,
+          name: cover_alt,
+          widget: string,
+          hint: "Describe the photo for screen readers, e.g. 'Jawans marching on the parade ground'.",
+        }
+      - label: Gallery
+        name: gallery
+        widget: list
+        min: 5
+        max: 30
+        summary: "{{fields.alt}}"
+        fields:
+          - { label: Image, name: image, widget: image }
+          - { label: Alt text, name: alt, widget: string }
+      - {
+          label: Story,
+          name: body,
+          widget: markdown,
+          hint: "2–6 short paragraphs.",
+        }
+      - {
+          label: Tags,
+          name: tags,
+          widget: list,
+          required: false,
+          default: [],
+          hint: "Free-form, comma separated — e.g. tuluni, festival, community",
+        }

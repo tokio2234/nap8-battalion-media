@@ -1,0 +1,165 @@
+---
+/**
+ * Landing page — exactly five sections:
+ *   1. Hero (full-viewport image, title, tagline, scroll cue)
+ *   2. Identity (sticky section, copy over 3 slowly crossfading images)
+ *   3. Three Doors (Events / School / Culture tiles)
+ *   4. Latest (single most recent post across all categories)
+ *   5. Footer (rendered by BaseLayout)
+ * Motion lives in src/scripts/landing.js and respects prefers-reduced-motion.
+ */
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, CATEGORIES, CATEGORY_SLUGS } from '../config/site';
+import { getPosts, postUrl, excerpt, formatDate } from '../lib/posts';
+
+import heroImage from '../assets/site/hero.jpg';
+import identity01 from '../assets/site/identity-01.jpg';
+import identity02 from '../assets/site/identity-02.jpg';
+import identity03 from '../assets/site/identity-03.jpg';
+import doorEvents from '../assets/site/door-events.jpg';
+import doorSchool from '../assets/site/door-school.jpg';
+import doorCulture from '../assets/site/door-culture.jpg';
+
+const identityImages = [identity01, identity02, identity03];
+const doorImages = { events: doorEvents, school: doorSchool, culture: doorCulture };
+
+const posts = await getPosts();
+const latest = posts[0];
+---
+
+<BaseLayout transparentHeader>
+  <!-- 1 · Hero -->
+  <section class="relative flex h-svh min-h-[560px] items-center justify-center overflow-hidden">
+    <Picture
+      src={heroImage}
+      alt=""
+      formats={['webp']}
+      fallbackFormat="jpg"
+      widths={[768, 1280, 1920]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="absolute inset-0 h-full w-full object-cover"
+    />
+    <!-- dark overlay for text legibility -->
+    <div class="absolute inset-0 bg-gradient-to-b from-ink/65 via-ink/45 to-ink" aria-hidden="true"></div>
+
+    <div class="relative z-10 max-w-4xl px-5 text-center" data-hero-text>
+      <p class="text-[0.7rem] uppercase tracking-[0.4em] text-paper/65 sm:text-xs">{SITE.eyebrow}</p>
+      <h1 class="mt-6 font-serif text-5xl leading-[1.08] sm:text-6xl md:text-7xl">
+        {SITE.title}
+      </h1>
+      <p class="mx-auto mt-7 max-w-xl text-base font-light text-paper/80 sm:text-lg">
+        {SITE.tagline}
+      </p>
+    </div>
+
+    <div class="scroll-cue absolute bottom-8 left-1/2 -translate-x-1/2 text-paper/60" aria-hidden="true">
+      <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m6 9 6 6 6-6"></path>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 2 · Identity — sticky, images crossfade behind one line of copy -->
+  <section id="identity" class="relative h-[170vh]">
+    <div class="sticky top-0 flex h-svh items-center justify-center overflow-hidden">
+      {
+        identityImages.map((image, index) => (
+          <Picture
+            src={image}
+            alt=""
+            formats={['webp']}
+            fallbackFormat="jpg"
+            widths={[768, 1280, 1600]}
+            sizes="100vw"
+            loading="lazy"
+            data-identity-img
+            class={`absolute inset-0 h-full w-full object-cover ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
+          />
+        ))
+      }
+      <div class="absolute inset-0 bg-ink/60" aria-hidden="true"></div>
+      <p
+        data-identity-copy
+        class="relative z-10 max-w-3xl px-5 text-center font-serif text-3xl leading-tight sm:text-4xl md:text-5xl"
+      >
+        {SITE.identityLine}
+      </p>
+    </div>
+  </section>
+
+  <!-- 3 · Three Doors -->
+  <section class="mx-auto max-w-6xl px-5 py-24" aria-label="Explore by category">
+    <div class="grid gap-5 md:grid-cols-3" data-doors>
+      {
+        CATEGORY_SLUGS.map((slug) => (
+          <a href={`/${slug}/`} data-door class="group relative block aspect-[4/5] overflow-hidden bg-panel">
+            <Picture
+              src={doorImages[slug]}
+              alt=""
+              formats={['webp']}
+              fallbackFormat="jpg"
+              widths={[480, 760]}
+              sizes="(min-width: 768px) 33vw, 100vw"
+              loading="lazy"
+              class="absolute inset-0 h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-700 group-hover:scale-105"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/30 to-transparent" aria-hidden="true" />
+            <div class="absolute inset-x-0 bottom-0 p-7">
+              <h2 class="font-serif text-3xl group-hover:text-accent-bright">{CATEGORIES[slug].name}</h2>
+              <p class="mt-2 text-sm leading-relaxed text-paper/70">{CATEGORIES[slug].description}</p>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- 4 · Latest -->
+  {
+    latest && (
+      <section class="border-t border-line" aria-label="Latest story">
+        <div class="mx-auto grid max-w-6xl items-center gap-10 px-5 py-24 md:grid-cols-2 md:gap-14" data-latest>
+          <a href={postUrl(latest)} class="group block overflow-hidden bg-panel">
+            <Picture
+              src={latest.data.cover_photo}
+              alt={latest.data.cover_alt}
+              formats={['webp']}
+              fallbackFormat="jpg"
+              widths={[600, 900, 1200]}
+              sizes="(min-width: 768px) 50vw, 100vw"
+              loading="lazy"
+              class="aspect-[3/2] w-full object-cover motion-safe:transition-transform motion-safe:duration-700 group-hover:scale-[1.04]"
+            />
+          </a>
+          <div>
+            <p class="text-[0.7rem] uppercase tracking-[0.3em] text-accent-bright">
+              Latest · {CATEGORIES[latest.data.category].name}
+            </p>
+            <h2 class="mt-5 font-serif text-3xl leading-tight sm:text-4xl">
+              <a href={postUrl(latest)} class="hover:text-accent-bright">
+                {latest.data.title}
+              </a>
+            </h2>
+            <p class="mt-3 text-sm text-muted">
+              {formatDate(latest.data.date)}
+              {latest.data.location && ` · ${latest.data.location}`}
+            </p>
+            <p class="mt-5 leading-relaxed text-paper/75">{excerpt(latest)}</p>
+            <a href={postUrl(latest)} class="mt-7 inline-block text-sm tracking-wide text-accent-bright hover:underline">
+              Read &rarr;
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- 5 · Footer is rendered by BaseLayout -->
+
+  <script>
+    import '../scripts/landing.js';
+  </script>
+</BaseLayout>

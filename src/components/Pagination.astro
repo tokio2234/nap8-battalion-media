@@ -1,0 +1,44 @@
+---
+/**
+ * Prev / next pagination controls for category listing pages.
+ * Receives Astro's paginate() page object.
+ */
+import type { Page } from 'astro';
+import type { Post } from '../lib/posts';
+
+interface Props {
+  page: Page<Post>;
+}
+const { page } = Astro.props;
+---
+
+{
+  page.lastPage > 1 && (
+    <nav
+      aria-label="Pagination"
+      class="mt-16 flex items-center justify-between border-t border-line pt-6 text-sm"
+    >
+      {page.url.prev ? (
+        <a href={page.url.prev} class="text-accent-bright hover:underline">
+          &larr; Newer
+        </a>
+      ) : (
+        <span class="text-muted/50" aria-hidden="true">
+          &larr; Newer
+        </span>
+      )}
+      <span class="text-muted">
+        Page {page.currentPage} of {page.lastPage}
+      </span>
+      {page.url.next ? (
+        <a href={page.url.next} class="text-accent-bright hover:underline">
+          Older &rarr;
+        </a>
+      ) : (
+        <span class="text-muted/50" aria-hidden="true">
+          Older &rarr;
+        </span>
+      )}
+    </nav>
+  )
+}

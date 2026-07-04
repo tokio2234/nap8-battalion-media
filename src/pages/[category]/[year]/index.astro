@@ -1,0 +1,44 @@
+---
+/**
+ * Year archives: /events/2026/, /culture/2025/, ...
+ * Reached from the year dropdown on category pages. Shows every post
+ * from that category and year on one page (no pagination — a single
+ * year rarely outgrows one page; revisit if it does).
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CategoryHeader from '../../../components/CategoryHeader.astro';
+import PostCard from '../../../components/PostCard.astro';
+import { CATEGORIES, type CategorySlug } from '../../../config/site';
+import { getPosts, postYear, postYears, type Post } from '../../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  const groups = new Map<string, Post[]>();
+  for (const post of posts) {
+    const key = `${post.data.category}/${postYear(post)}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(post);
+  }
+  return [...groups.entries()].map(([key, groupPosts]) => {
+    const [category, year] = key.split('/');
+    return { params: { category, year }, props: { posts: groupPosts } };
+  });
+}
+
+const { posts } = Astro.props as { posts: Post[] };
+const category = Astro.params.category as CategorySlug;
+const year = Number(Astro.params.year);
+const meta = CATEGORIES[category];
+
+const years = postYears(await getPosts(category));
+---
+
+<BaseLayout title={`${meta.name} · ${year}`} description={meta.description}>
+  <CategoryHeader category={category} years={years} selectedYear={year} />
+
+  <div class="mx-auto max-w-6xl px-5 py-14">
+    <div class="grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+      {posts.map((post) => <PostCard post={post} />)}
+    </div>
+  </div>
+</BaseLayout>

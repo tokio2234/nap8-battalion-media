@@ -1,0 +1,26 @@
+{
+  "name": "nap8-battalion-media",
+  "description": "Content hub website for the 8th NAP Battalion, Naltoqa",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "cms": "decap-server",
+    "placeholders": "node scripts/generate-placeholders.mjs"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.2.5",
+    "@fontsource/playfair-display": "^5.2.5",
+    "@tailwindcss/vite": "^4.1.0",
+    "astro": "^5.0.0",
+    "gsap": "^3.12.5",
+    "sharp": "^0.33.5",
+    "tailwindcss": "^4.1.0"
+  },
+  "devDependencies": {
+    "decap-server": "^3.2.0"
+  }
+}
