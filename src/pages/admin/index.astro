@@ -1,0 +1,24 @@
+---
+/**
+ * Decap CMS admin panel, served by Astro at /admin/ so it works the same
+ * in `npm run dev` and in production. (A plain HTML file in public/ is only
+ * reachable at /admin/index.html on the dev server, which is confusing.)
+ * The CMS loads its configuration from /admin/config.yml (public/admin/).
+ */
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Content Manager — 8th NAP Battalion</title>
+    <!-- Netlify Identity: handles login for the CMS in production -->
+    <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  </head>
+  <body>
+    <!-- Decap CMS reads its configuration from /admin/config.yml -->
+    <script is:inline src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  </body>
+</html>

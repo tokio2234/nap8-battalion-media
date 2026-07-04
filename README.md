@@ -157,10 +157,11 @@ src/
   components/           ← post card, pagination, category header, footer…
   scripts/              ← GSAP landing motion, scroll reveals, lightbox
   pages/                ← landing, about, gallery, 404
+    admin/index.astro                 ← Decap CMS admin panel shell
     [category]/[...page].astro        ← /events/, /events/2/ … (12 per page)
     [category]/[year]/index.astro     ← /events/2026/ (year filter)
     [category]/[year]/[slug].astro    ← individual posts
-public/admin/           ← Decap CMS (index.html + config.yml)
+public/admin/config.yml ← Decap CMS configuration (fields, media folder)
 ```
 
 All motion (GSAP scroll animations, reveals, hover zooms) respects
