@@ -1,6 +1,6 @@
 ---
 title: Tuluni Celebration
-date: 2026-07-02
+date: 2026-07-04
 category: culture
 location: Naltoqa, Zunheboto
 cover_photo: ../../assets/uploads/whatsapp-image-2026-07-03-at-10.41.27-am.jpeg
