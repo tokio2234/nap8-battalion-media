@@ -10,7 +10,7 @@ gallery:
     alt: Placeholder — community members gathered for the Tuluni feast
   - image: ../../assets/uploads/tuluni-02.jpg
     alt: Placeholder — traditional attire worn during the celebrations
-  - image: ../../assets/uploads/tuluni-03.jpg
+  - image: ../../assets/uploads/whatsapp-image-2026-07-03-at-10.41.27-am.jpeg
     alt: Placeholder — folk performance on the battalion grounds
   - image: ../../assets/uploads/tuluni-04.jpg
     alt: Placeholder — elders sharing rice beer in bamboo mugs
