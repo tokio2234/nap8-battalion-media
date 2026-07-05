@@ -1,9 +1,6 @@
-# Landing page content — editable at /admin under "Site settings → Landing page".
-# The image paths are relative to this file; the CMS fills them in automatically
-# when you upload a photo, so you normally never edit this file by hand.
 tagline: Duty and community in the hills of Nagaland.
 identity_line: Rooted in Naltoqa. Serving Nagaland.
-hero: ../../assets/uploads/hero.jpg
+hero: ../../assets/uploads/firefly_geminiflash_upscale-this-image-to-4k-73019-1-.jpg
 identity_images:
   - ../../assets/uploads/identity-01.jpg
   - ../../assets/uploads/identity-02.jpg
