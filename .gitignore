@@ -1,5 +1,7 @@
 # build output
 dist/
+# netlify cli cache
+.netlify/
 # generated types
 .astro/
 # dependencies

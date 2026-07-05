@@ -32,4 +32,26 @@ const posts = defineCollection({
     }),
 });
 
-export const collections = { posts };
+/**
+ * The "settings" collection holds site-wide editable content that isn't a post.
+ * Right now that's the landing page (src/content/settings/landing.yml): the hero
+ * photo, the three crossfade photos, the three category-tile photos, and the two
+ * lines of hero/identity copy. Edited at /admin under "Site settings".
+ */
+const settings = defineCollection({
+  loader: glob({ pattern: '**/*.yml', base: './src/content/settings' }),
+  schema: ({ image }) =>
+    z.object({
+      tagline: z.string(),
+      identity_line: z.string(),
+      // All landing images are decorative (text is overlaid on them), so no
+      // alt text is needed. image() gives build-time WebP + responsive sizes.
+      hero: image(),
+      identity_images: z.array(image()).min(1).max(3),
+      door_events: image(),
+      door_school: image(),
+      door_culture: image(),
+    }),
+});
+
+export const collections = { posts, settings };

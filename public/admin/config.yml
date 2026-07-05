@@ -19,6 +19,47 @@ media_folder: "src/assets/uploads"
 public_folder: "../../assets/uploads"
 
 collections:
+  # Landing page — a single editable file (not a list of entries), so it uses
+  # `files:` rather than `folder:`. Lets the maintainer swap the hero and other
+  # landing photos and edit the two headline lines without touching code.
+  - name: settings
+    label: Site settings
+    editor:
+      preview: false
+    files:
+      - name: landing
+        label: Landing page
+        file: "src/content/settings/landing.yml"
+        fields:
+          - {
+              label: Hero tagline,
+              name: tagline,
+              widget: string,
+              hint: "The line under the big title on the front page.",
+            }
+          - {
+              label: Identity line,
+              name: identity_line,
+              widget: string,
+              hint: "The single line of copy over the crossfading photos, e.g. 'Rooted in Naltoqa. Serving Nagaland.'",
+            }
+          - {
+              label: Hero photo,
+              name: hero,
+              widget: image,
+              hint: "Full-screen background photo at the top of the front page. Use a large landscape image.",
+            }
+          - label: Identity crossfade photos
+            name: identity_images
+            widget: list
+            min: 1
+            max: 3
+            field: { label: Photo, name: image, widget: image }
+            hint: "Up to 3 photos that slowly crossfade behind the identity line."
+          - { label: Events tile photo, name: door_events, widget: image }
+          - { label: School tile photo, name: door_school, widget: image }
+          - { label: Culture tile photo, name: door_culture, widget: image }
+
   - name: posts
     label: Posts
     label_singular: Post

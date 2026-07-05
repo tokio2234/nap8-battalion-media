@@ -10,19 +10,18 @@ import sharp from 'sharp';
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 
-const SITE_DIR = 'src/assets/site';
 const UPLOADS_DIR = 'src/assets/uploads';
 
 // [file, width, height, gradientFrom, gradientTo, label]
 const images = [
   // Landing page imagery
-  [`${SITE_DIR}/hero.jpg`, 1920, 1160, '#1c2a22', '#0b100d', 'Hero photograph'],
-  [`${SITE_DIR}/identity-01.jpg`, 1600, 1000, '#26221c', '#12100d', 'Identity photo 1'],
-  [`${SITE_DIR}/identity-02.jpg`, 1600, 1000, '#1f2626', '#0f1414', 'Identity photo 2'],
-  [`${SITE_DIR}/identity-03.jpg`, 1600, 1000, '#2a1d1a', '#140d0c', 'Identity photo 3'],
-  [`${SITE_DIR}/door-events.jpg`, 1200, 1500, '#232633', '#10121a', 'Events'],
-  [`${SITE_DIR}/door-school.jpg`, 1200, 1500, '#1e2b26', '#0d1512', 'School'],
-  [`${SITE_DIR}/door-culture.jpg`, 1200, 1500, '#33201d', '#170e0c', 'Culture'],
+  [`${UPLOADS_DIR}/hero.jpg`, 1920, 1160, '#1c2a22', '#0b100d', 'Hero photograph'],
+  [`${UPLOADS_DIR}/identity-01.jpg`, 1600, 1000, '#26221c', '#12100d', 'Identity photo 1'],
+  [`${UPLOADS_DIR}/identity-02.jpg`, 1600, 1000, '#1f2626', '#0f1414', 'Identity photo 2'],
+  [`${UPLOADS_DIR}/identity-03.jpg`, 1600, 1000, '#2a1d1a', '#140d0c', 'Identity photo 3'],
+  [`${UPLOADS_DIR}/door-events.jpg`, 1200, 1500, '#232633', '#10121a', 'Events'],
+  [`${UPLOADS_DIR}/door-school.jpg`, 1200, 1500, '#1e2b26', '#0d1512', 'School'],
+  [`${UPLOADS_DIR}/door-culture.jpg`, 1200, 1500, '#33201d', '#170e0c', 'Culture'],
 
   // Post: Tuluni Celebration (culture)
   [`${UPLOADS_DIR}/tuluni-cover.jpg`, 1600, 1000, '#31211c', '#140e0b', 'Tuluni — cover'],
@@ -67,7 +66,6 @@ function svgFor(width, height, from, to, label) {
   </svg>`;
 }
 
-await mkdir(SITE_DIR, { recursive: true });
 await mkdir(UPLOADS_DIR, { recursive: true });
 
 for (const [file, width, height, from, to, label] of images) {

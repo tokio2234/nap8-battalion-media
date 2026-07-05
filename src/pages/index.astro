@@ -9,20 +9,21 @@
  * Motion lives in src/scripts/landing.js and respects prefers-reduced-motion.
  */
 import { Picture } from 'astro:assets';
+import { getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE, CATEGORIES, CATEGORY_SLUGS } from '../config/site';
 import { getPosts, postUrl, excerpt, formatDate } from '../lib/posts';
 
-import heroImage from '../assets/site/hero.jpg';
-import identity01 from '../assets/site/identity-01.jpg';
-import identity02 from '../assets/site/identity-02.jpg';
-import identity03 from '../assets/site/identity-03.jpg';
-import doorEvents from '../assets/site/door-events.jpg';
-import doorSchool from '../assets/site/door-school.jpg';
-import doorCulture from '../assets/site/door-culture.jpg';
-
-const identityImages = [identity01, identity02, identity03];
-const doorImages = { events: doorEvents, school: doorSchool, culture: doorCulture };
+// Landing imagery and copy come from the CMS-editable settings collection
+// (src/content/settings/landing.yml → /admin "Site settings").
+const landing = (await getEntry('settings', 'landing'))!.data;
+const heroImage = landing.hero;
+const identityImages = landing.identity_images;
+const doorImages = {
+  events: landing.door_events,
+  school: landing.door_school,
+  culture: landing.door_culture,
+};
 
 const posts = await getPosts();
 const latest = posts[0];
@@ -51,7 +52,7 @@ const latest = posts[0];
         {SITE.title}
       </h1>
       <p class="mx-auto mt-7 max-w-xl text-base font-light text-paper/80 sm:text-lg">
-        {SITE.tagline}
+        {landing.tagline}
       </p>
     </div>
 
@@ -85,7 +86,7 @@ const latest = posts[0];
         data-identity-copy
         class="relative z-10 max-w-3xl px-5 text-center font-serif text-3xl leading-tight sm:text-4xl md:text-5xl"
       >
-        {SITE.identityLine}
+        {landing.identity_line}
       </p>
     </div>
   </section>

@@ -1,7 +1,8 @@
 /**
- * Site-wide settings. Edit this file to change the title, tagline,
- * contact details, and category descriptions — no other file needs touching.
- * (Colors and fonts live in src/styles/global.css.)
+ * Site-wide settings. Edit this file to change the title, contact details,
+ * and category descriptions — no other file needs touching.
+ * (Colors and fonts live in src/styles/global.css. The hero tagline, identity
+ * line, and landing photos are edited at /admin under "Site settings".)
  */
 
 export const SITE = {
@@ -11,10 +12,6 @@ export const SITE = {
   shortTitle: '8th NAP Battalion',
   /** Small line above the hero title. */
   eyebrow: 'Nagaland Armed Police',
-  /** Hero tagline — placeholder, replace with the final line. */
-  tagline: 'Duty and community in the hills of Nagaland.',
-  /** Line shown in the sticky Identity section — placeholder, replace with the final line. */
-  identityLine: 'Rooted in Naltoqa. Serving Nagaland.',
   /** Default meta description for pages that don't set their own. */
   description:
     'Stories, events, school news, and cultural life from the 8th NAP Battalion, Naltoqa, Nagaland.',

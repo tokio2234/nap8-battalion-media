@@ -122,9 +122,12 @@ at build time.
 
 ## 5. Change the site title, tagline, and colors
 
-- **Title, tagline, identity line, contact email, location, map pin, social
-  links, category descriptions** → [`src/config/site.ts`](src/config/site.ts).
-  Everything is commented.
+- **Hero tagline, identity line, and the landing-page photos** (hero, the three
+  crossfade images, the three category tiles) → edit these in `/admin` under
+  **Site settings → Landing page**. No code needed — same as posts.
+- **Title, contact email, location, map pin, social links, category
+  descriptions** → [`src/config/site.ts`](src/config/site.ts). Everything is
+  commented.
 - **Colors** → the `@theme` block at the top of
   [`src/styles/global.css`](src/styles/global.css). `--color-accent` is the
   deep Sumi-shawl vermillion (dividers, hovers); `--color-accent-bright` is a
@@ -135,20 +138,17 @@ at build time.
   [`src/layouts/BaseLayout.astro`](src/layouts/BaseLayout.astro) and the
   `--font-serif` / `--font-sans` values in `global.css`. Any
   [Fontsource](https://fontsource.org) font is free and self-hosted.
-- **Landing/section photos** (hero, identity crossfade, three door tiles) →
-  replace the files in `src/assets/site/` keeping the same filenames, or edit
-  the imports in [`src/pages/index.astro`](src/pages/index.astro).
 
 ## 6. How the site fits together
 
 ```
 src/
-  config/site.ts        ← titles, taglines, contacts, category descriptions
-  styles/global.css     ← colors, fonts, shared styles
-  content/posts/*.md    ← one file per post (all three categories)
-  content.config.ts     ← the post schema (validated at build time)
-  assets/site/          ← landing page photography
-  assets/uploads/       ← post photos (also where the CMS uploads)
+  config/site.ts            ← title, contacts, category descriptions
+  styles/global.css         ← colors, fonts, shared styles
+  content/posts/*.md        ← one file per post (all three categories)
+  content/settings/landing.yml ← landing photos + tagline (CMS "Site settings")
+  content.config.ts         ← the post + settings schemas (validated at build)
+  assets/uploads/           ← all photos (posts and landing; CMS uploads here)
   layouts/BaseLayout    ← <head>, header, footer shell
   components/           ← post card, pagination, category header, footer…
   scripts/              ← GSAP landing motion, scroll reveals, lightbox
