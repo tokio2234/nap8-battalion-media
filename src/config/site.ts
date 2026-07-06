@@ -16,7 +16,7 @@ export const SITE = {
   description:
     'Stories, events, school news, and cultural life from the 8th NAP Battalion, Naltoqa, Nagaland.',
   /** Contact email shown in the footer and on the About page — placeholder. */
-  contactEmail: 'contact@example.com',
+  contactEmail: '8napbattalion@gmail.com',
   /** Human-readable location, shown in the footer. */
   location: 'Naltoqa, Nagaland',
   /**
