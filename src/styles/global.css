@@ -92,6 +92,59 @@ body {
   }
 }
 
+/* ------------------------------------------------------ phone menu
+ * Below 640px the header links collapse behind a menu button
+ * (src/components/Header.astro). Everything is scoped to html.js, so
+ * without JavaScript the links just stay visible and wrap as normal.
+ */
+.nav-toggle {
+  display: none;
+}
+@media (max-width: 639px) {
+  .js .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* 44px tap target without making the header taller */
+    width: 2.75rem;
+    height: 2.75rem;
+    margin: -0.5rem -0.6rem -0.5rem 0;
+    color: var(--color-paper);
+    cursor: pointer;
+  }
+  .nav-toggle .nav-icon-close,
+  .nav-toggle[aria-expanded="true"] .nav-icon-open {
+    display: none;
+  }
+  .nav-toggle[aria-expanded="true"] .nav-icon-close {
+    display: block;
+  }
+
+  .js .site-nav {
+    display: none;
+    width: 100%;
+  }
+  .js .site-header.is-open .site-nav {
+    display: block;
+  }
+  /* Solid backdrop so the open menu stays readable over the landing hero */
+  .js .site-header.is-open {
+    background-color: var(--color-ink);
+    border-bottom: 1px solid var(--color-line);
+  }
+  .js .site-nav ul {
+    flex-direction: column;
+    gap: 0;
+    padding-top: 0.75rem;
+    font-size: 0.8rem;
+  }
+  .js .site-nav a {
+    display: block;
+    padding: 0.9rem 0;
+    border-top: 1px solid var(--color-line);
+  }
+}
+
 /* ---------------------------------------------------- hero scroll cue */
 @media (prefers-reduced-motion: no-preference) {
   .scroll-cue {

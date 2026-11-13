@@ -21,15 +21,33 @@ const isActive = (href: string) => currentPath === href || currentPath.startsWit
 ---
 
 <header
-  class={transparent
+  data-site-header
+  class={`site-header ${transparent
     ? 'absolute inset-x-0 top-0 z-20'
-    : 'border-b border-line bg-ink'}
+    : 'border-b border-line bg-ink'}`}
 >
-  <div class="mx-auto flex max-w-6xl flex-wrap items-baseline justify-between gap-x-8 gap-y-2 px-5 py-5">
+  <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-8 gap-y-2 px-5 py-5 sm:items-baseline">
     <a href="/" class="font-serif text-lg tracking-wide text-paper hover:text-accent-bright">
       {SITE.shortTitle}
     </a>
-    <nav aria-label="Main navigation">
+    <!-- Phone-only menu button (shown by global.css when JS is running;
+         without JS the links simply stay visible as before). -->
+    <button
+      type="button"
+      class="nav-toggle"
+      data-nav-toggle
+      aria-controls="site-nav"
+      aria-expanded="false"
+      aria-label="Menu"
+    >
+      <svg class="nav-icon-open h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16"></path>
+      </svg>
+      <svg class="nav-icon-close h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+        <path d="M6 6l12 12M18 6 6 18"></path>
+      </svg>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Main navigation">
       <ul class="flex flex-wrap gap-x-5 gap-y-1 text-[0.72rem] uppercase tracking-[0.18em]">
         {
           links.map((link) => (
@@ -50,3 +68,23 @@ const isActive = (href: string) => currentPath === href || currentPath.startsWit
     </nav>
   </div>
 </header>
+
+<script>
+  // Phone menu: the button shows/hides the links (styles in global.css).
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+
+  if (header && toggle) {
+    const setOpen = (open: boolean) => {
+      header.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+    };
+    toggle.addEventListener('click', () => setOpen(!header.classList.contains('is-open')));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && header.classList.contains('is-open')) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+  }
+</script>
