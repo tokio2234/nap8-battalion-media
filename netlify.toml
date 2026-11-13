@@ -1,6 +1,9 @@
 # Netlify build settings — picked up automatically when the repo is connected.
 [build]
-  command = "npm run build"
+  # --force rebuilds Astro's content index from scratch on every deploy.
+  # Netlify restores a cached copy between builds, and a stale entry for a
+  # deleted or renamed post makes the build fail (LocalImageUsedWrongly).
+  command = "npm run build -- --force"
   publish = "dist"
 
 [build.environment]
