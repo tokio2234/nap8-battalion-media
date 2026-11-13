@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+
+# If the domain changes, update this line and `site` in astro.config.mjs.
+Sitemap: https://nap8-naltoqa.netlify.app/sitemap.xml

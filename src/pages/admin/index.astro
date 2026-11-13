@@ -18,7 +18,9 @@
     <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   </head>
   <body>
-    <!-- Decap CMS reads its configuration from /admin/config.yml -->
-    <script is:inline src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <!-- Decap CMS reads its configuration from /admin/config.yml.
+         Version is pinned so a new release can't silently break the admin panel;
+         bump it deliberately and test /admin locally before deploying. -->
+    <script is:inline src="https://unpkg.com/decap-cms@3.17.3/dist/decap-cms.js"></script>
   </body>
 </html>

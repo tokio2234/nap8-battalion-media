@@ -38,7 +38,7 @@ const galleryFull = await Promise.all(
 const related = (await getPosts(category)).filter((p) => p.id !== post.id).slice(0, 3);
 ---
 
-<BaseLayout title={title} description={excerpt(post)}>
+<BaseLayout title={title} description={excerpt(post)} image={cover_photo} type="article">
   <!-- Cover hero -->
   <section class="relative flex min-h-[420px] items-end overflow-hidden md:h-[68vh]">
     <Picture
@@ -148,7 +148,7 @@ const related = (await getPosts(category)).filter((p) => p.id !== post.id).slice
           </div>
           <div class="grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((p) => (
-              <PostCard post={p} />
+              <PostCard post={p} headingLevel={3} />
             ))}
           </div>
         </div>

@@ -1,14 +1,14 @@
 # Decap CMS configuration — the admin panel at /admin reads this file.
 #
 # Auth in production: Netlify Identity + Git Gateway (see README for setup).
-# Auth locally: run `npm run cms` alongside `npm run dev` and /admin will
-# talk to your local git repo directly, no login needed.
+# Auth locally: `npm run dev` also starts the local CMS backend (decap-server),
+# so /admin talks to your local git repo directly, no login needed.
 
 backend:
   name: git-gateway
   branch: main
 
-# When decap-server (npm run cms) is running on localhost, the CMS writes
+# When decap-server (started by npm run dev) is running on localhost, the CMS writes
 # straight to the local repo. This flag is ignored in production.
 local_backend: true
 

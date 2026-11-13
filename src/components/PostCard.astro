@@ -8,8 +8,15 @@ import { excerpt, formatDate, postUrl, type Post } from '../lib/posts';
 
 interface Props {
   post: Post;
+  /**
+   * Heading level for the card title, so headings never skip a level:
+   * 2 on listing pages (directly under the page <h1>), 3 inside a section
+   * that already has its own <h2> (e.g. "More from …").
+   */
+  headingLevel?: 2 | 3;
 }
-const { post } = Astro.props;
+const { post, headingLevel = 2 } = Astro.props;
+const Heading = `h${headingLevel}` as 'h2' | 'h3';
 ---
 
 <article data-reveal>
@@ -25,9 +32,9 @@ const { post } = Astro.props;
         class="aspect-[3/2] w-full object-cover motion-safe:transition-transform motion-safe:duration-700 group-hover:scale-[1.04]"
       />
     </div>
-    <h3 class="mt-4 font-serif text-xl leading-snug group-hover:text-accent-bright">
+    <Heading class="mt-4 font-serif text-xl leading-snug group-hover:text-accent-bright">
       {post.data.title}
-    </h3>
+    </Heading>
     <p class="mt-1.5 text-xs uppercase tracking-[0.15em] text-muted">
       {formatDate(post.data.date)}
     </p>
