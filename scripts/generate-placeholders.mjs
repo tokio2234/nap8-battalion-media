@@ -23,14 +23,6 @@ const images = [
   [`${UPLOADS_DIR}/door-school.jpg`, 1200, 1500, '#1e2b26', '#0d1512', 'School'],
   [`${UPLOADS_DIR}/door-culture.jpg`, 1200, 1500, '#33201d', '#170e0c', 'Culture'],
 
-  // Post: Tuluni Celebration (culture)
-  [`${UPLOADS_DIR}/tuluni-cover.jpg`, 1600, 1000, '#31211c', '#140e0b', 'Tuluni — cover'],
-  [`${UPLOADS_DIR}/tuluni-01.jpg`, 1600, 1067, '#2b241b', '#120f0b', 'Tuluni 1'],
-  [`${UPLOADS_DIR}/tuluni-02.jpg`, 1600, 1067, '#22281f', '#0e110d', 'Tuluni 2'],
-  [`${UPLOADS_DIR}/tuluni-03.jpg`, 1600, 1067, '#2e1e22', '#130d0f', 'Tuluni 3'],
-  [`${UPLOADS_DIR}/tuluni-04.jpg`, 1600, 1067, '#252331', '#0f0e15', 'Tuluni 4'],
-  [`${UPLOADS_DIR}/tuluni-05.jpg`, 1600, 1067, '#33261a', '#15100b', 'Tuluni 5'],
-
   // Post: Raising Day Parade (events)
   [`${UPLOADS_DIR}/raising-day-cover.jpg`, 1600, 1000, '#1f2433', '#0d0f15', 'Raising Day — cover'],
   [`${UPLOADS_DIR}/raising-day-01.jpg`, 1600, 1067, '#252c3a', '#0f1219', 'Raising Day 1'],
