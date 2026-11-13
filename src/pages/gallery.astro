@@ -90,7 +90,10 @@ const years = postYears(posts);
         ))
       }
     </div>
-    <p id="gallery-empty" class="hidden py-10 text-muted">No photos match this filter yet.</p>
+    {/* Shown by the filter script when nothing matches — and from the start when there are no posts at all. */}
+    <p id="gallery-empty" class:list={['py-10 text-muted', { hidden: posts.length > 0 }]}>
+      {posts.length > 0 ? 'No photos match this filter yet.' : 'No photos yet — the first ones are coming soon.'}
+    </p>
   </div>
 
   <script>

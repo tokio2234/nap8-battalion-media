@@ -22,22 +22,6 @@ const images = [
   [`${UPLOADS_DIR}/door-events.jpg`, 1200, 1500, '#232633', '#10121a', 'Events'],
   [`${UPLOADS_DIR}/door-school.jpg`, 1200, 1500, '#1e2b26', '#0d1512', 'School'],
   [`${UPLOADS_DIR}/door-culture.jpg`, 1200, 1500, '#33201d', '#170e0c', 'Culture'],
-
-  // Post: Raising Day Parade (events)
-  [`${UPLOADS_DIR}/raising-day-cover.jpg`, 1600, 1000, '#1f2433', '#0d0f15', 'Raising Day — cover'],
-  [`${UPLOADS_DIR}/raising-day-01.jpg`, 1600, 1067, '#252c3a', '#0f1219', 'Raising Day 1'],
-  [`${UPLOADS_DIR}/raising-day-02.jpg`, 1600, 1067, '#1d2a2e', '#0c1214', 'Raising Day 2'],
-  [`${UPLOADS_DIR}/raising-day-03.jpg`, 1600, 1067, '#2a2733', '#111015', 'Raising Day 3'],
-  [`${UPLOADS_DIR}/raising-day-04.jpg`, 1600, 1067, '#212f3a', '#0d1319', 'Raising Day 4'],
-  [`${UPLOADS_DIR}/raising-day-05.jpg`, 1600, 1067, '#2c2230', '#120e14', 'Raising Day 5'],
-
-  // Post: Annual Sports Meet (school)
-  [`${UPLOADS_DIR}/sports-meet-cover.jpg`, 1600, 1000, '#1e2d24', '#0c130f', 'Sports Meet — cover'],
-  [`${UPLOADS_DIR}/sports-meet-01.jpg`, 1600, 1067, '#243026', '#0f1410', 'Sports Meet 1'],
-  [`${UPLOADS_DIR}/sports-meet-02.jpg`, 1600, 1067, '#2b2f20', '#12140e', 'Sports Meet 2'],
-  [`${UPLOADS_DIR}/sports-meet-03.jpg`, 1600, 1067, '#1f2b30', '#0d1214', 'Sports Meet 3'],
-  [`${UPLOADS_DIR}/sports-meet-04.jpg`, 1600, 1067, '#2f2a1e', '#14120d', 'Sports Meet 4'],
-  [`${UPLOADS_DIR}/sports-meet-05.jpg`, 1600, 1067, '#25321f', '#10150d', 'Sports Meet 5'],
 ];
 
 function svgFor(width, height, from, to, label) {
