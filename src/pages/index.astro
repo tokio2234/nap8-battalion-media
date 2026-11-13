@@ -1,10 +1,10 @@
 ---
 /**
- * Landing page — exactly five sections:
- *   1. Hero (full-viewport image, title, tagline, scroll cue)
- *   2. Identity (sticky section, copy over 3 slowly crossfading images)
- *   3. Three Doors (Events / School / Culture tiles)
- *   4. Latest (single most recent post across all categories)
+ * Landing page:
+ *   1. Hero — full-screen photo (CMS "Hero photo") with the title over it
+ *   2. Identity — headline beside a framed photo (photos crossfade)
+ *   3. Explore — three flip cards, one per category
+ *   4. Latest — the most recent post, if there is one
  *   5. Footer (rendered by BaseLayout)
  * Motion lives in src/scripts/landing.js and respects prefers-reduced-motion.
  */
@@ -14,10 +14,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE, CATEGORIES, CATEGORY_SLUGS } from '../config/site';
 import { getPosts, postUrl, excerpt, formatDate } from '../lib/posts';
 
-// Landing imagery and copy come from the CMS-editable settings collection
+// Landing copy and photos come from the CMS-editable settings collection
 // (src/content/settings/landing.yml → /admin "Site settings").
 const landing = (await getEntry('settings', 'landing'))!.data;
-const heroImage = landing.hero;
 const identityImages = landing.identity_images;
 const doorImages = {
   events: landing.door_events,
@@ -25,15 +24,29 @@ const doorImages = {
   culture: landing.door_culture,
 };
 
+// "8th NAP Battalion, Naltoqa" → big first line, smaller second line.
+const [titleMain, ...titleRest] = SITE.title.split(', ');
+const titleSub = titleRest.join(', ');
+
 const posts = await getPosts();
 const latest = posts[0];
+
+// Which card starts turned over (the middle one).
+const startCard = Math.floor(CATEGORY_SLUGS.length / 2);
+const pad = (n: number) => String(n).padStart(2, '0');
+
+// Decorative points of light around the framed photo: [left %, top %, size px, seconds]
+const sparks = [
+  [-9, 18, 7, 7], [-5, 72, 5, 9], [104, 30, 6, 8], [108, 82, 8, 6],
+  [38, -8, 5, 10], [72, 106, 6, 7], [-12, 46, 4, 11], [112, 56, 4, 9],
+];
 ---
 
 <BaseLayout transparentHeader>
   <!-- 1 · Hero -->
-  <section class="relative flex h-svh min-h-[560px] items-center justify-center overflow-hidden">
+  <section class="relative h-svh min-h-[600px] overflow-hidden bg-ink" data-hero>
     <Picture
-      src={heroImage}
+      src={landing.hero}
       alt=""
       formats={['webp']}
       fallbackFormat="jpg"
@@ -41,117 +54,244 @@ const latest = posts[0];
       sizes="100vw"
       loading="eager"
       fetchpriority="high"
+      data-hero-image
       class="absolute inset-0 h-full w-full object-cover"
     />
-    <!-- dark overlay for text legibility -->
-    <div class="absolute inset-0 bg-gradient-to-b from-ink/65 via-ink/45 to-ink" aria-hidden="true"></div>
+    <!-- Navy tint: keeps the title readable and melts the photo into the page below -->
+    <div class="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/35 to-ink" aria-hidden="true"></div>
 
-    <div class="relative z-10 max-w-4xl px-5 text-center" data-hero-text>
-      <p class="text-[0.7rem] uppercase tracking-[0.4em] text-paper/65 sm:text-xs">{SITE.eyebrow}</p>
-      <h1 class="mt-6 font-serif text-5xl leading-[1.08] sm:text-6xl md:text-7xl">
-        {SITE.title}
+    <div class="relative z-10 mx-auto flex h-full max-w-5xl flex-col items-center px-5 pt-[15svh] text-center" data-hero-text>
+      <p class="eyebrow !text-paper/75">{SITE.eyebrow}</p>
+      <h1 class="display mt-6 [text-shadow:0_2px_24px_rgb(7_15_32/0.55)]">
+        <span class="block text-[clamp(2.4rem,7.4vw,5.5rem)] tracking-[0.1em]">{titleMain}</span>
+        {
+          titleSub && (
+            <span class="mt-3 block text-[clamp(1.1rem,2.6vw,1.9rem)] tracking-[0.5em] text-accent-bright">
+              {titleSub}
+            </span>
+          )
+        }
       </h1>
-      <p class="mx-auto mt-7 max-w-xl text-base font-light text-paper/80 sm:text-lg">
+      <p class="mt-6 max-w-xl font-condensed text-base tracking-[0.2em] text-paper/85 sm:text-lg">
         {landing.tagline}
       </p>
-    </div>
-
-    <div class="scroll-cue absolute bottom-8 left-1/2 -translate-x-1/2 text-paper/60" aria-hidden="true">
-      <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="m6 9 6 6 6-6"></path>
-      </svg>
+      <a href="#explore" class="btn btn-solid mt-8">Explore</a>
     </div>
   </section>
 
-  <!-- 2 · Identity — sticky, images crossfade behind one line of copy -->
-  <section id="identity" class="relative h-[170vh]">
-    <div class="sticky top-0 flex h-svh items-center justify-center overflow-hidden">
-      {
-        identityImages.map((image, index) => (
-          <Picture
-            src={image}
-            alt=""
-            formats={['webp']}
-            fallbackFormat="jpg"
-            widths={[768, 1280, 1600]}
-            sizes="100vw"
-            loading="lazy"
-            data-identity-img
-            class={`absolute inset-0 h-full w-full object-cover ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
-          />
-        ))
-      }
-      <div class="absolute inset-0 bg-ink/60" aria-hidden="true"></div>
-      <p
-        data-identity-copy
-        class="relative z-10 max-w-3xl px-5 text-center font-serif text-3xl leading-tight sm:text-4xl md:text-5xl"
-      >
-        {landing.identity_line}
-      </p>
+  <!-- 2 · Identity -->
+  <section class="relative overflow-hidden">
+    <div
+      class="pointer-events-none absolute -right-40 top-1/2 h-[38rem] w-[38rem] -translate-y-1/2 rounded-full bg-band/60 blur-3xl"
+      aria-hidden="true"
+    >
+    </div>
+    <div class="relative mx-auto grid max-w-6xl items-center gap-16 px-5 py-24 md:grid-cols-2 md:py-32" data-rise>
+      <div>
+        <p class="eyebrow">{SITE.location}</p>
+        <h2 class="display mt-5 text-4xl sm:text-5xl">{landing.identity_line}</h2>
+        <p class="mt-6 max-w-md leading-relaxed text-paper/75">{SITE.description}</p>
+        <a href="/about/" class="btn btn-solid mt-9">About the battalion</a>
+      </div>
+
+      <div class="relative mx-auto w-full max-w-md">
+        <div class="frame">
+          <span class="frame-corner"></span><span class="frame-corner"></span>
+          <span class="frame-corner"></span><span class="frame-corner"></span>
+          <div class="relative aspect-[4/5] overflow-hidden bg-panel" data-fade-stack>
+            {
+              identityImages.map((image, index) => (
+                <Picture
+                  src={image}
+                  alt=""
+                  formats={['webp']}
+                  fallbackFormat="jpg"
+                  widths={[480, 760, 1000]}
+                  sizes="(min-width: 768px) 28rem, 90vw"
+                  loading="lazy"
+                  class={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1400ms] ${
+                    index === 0 ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
+              ))
+            }
+          </div>
+        </div>
+        <div aria-hidden="true">
+          {
+            sparks.map(([left, top, size, dur], i) => (
+              <span
+                class="firefly"
+                style={`left:${left}%;top:${top}%;--size:${size}px;--dur:${dur}s;--delay:${(i * 0.6).toFixed(1)}s;--dx:${i % 2 ? -16 : 14}px;--dy:${-18 - i * 3}px`}
+              />
+            ))
+          }
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- 3 · Three Doors -->
-  <section class="mx-auto max-w-6xl px-5 py-24" aria-label="Explore by category">
-    <div class="grid gap-5 md:grid-cols-3" data-doors>
-      {
-        CATEGORY_SLUGS.map((slug) => (
-          <a href={`/${slug}/`} data-door class="group relative block aspect-[4/5] overflow-hidden bg-panel">
-            <Picture
-              src={doorImages[slug]}
-              alt=""
-              formats={['webp']}
-              fallbackFormat="jpg"
-              widths={[480, 760]}
-              sizes="(min-width: 768px) 33vw, 100vw"
-              loading="lazy"
-              class="absolute inset-0 h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-700 group-hover:scale-105"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/30 to-transparent" aria-hidden="true" />
-            <div class="absolute inset-x-0 bottom-0 p-7">
-              <h2 class="font-serif text-3xl group-hover:text-accent-bright">{CATEGORIES[slug].name}</h2>
-              <p class="mt-2 text-sm leading-relaxed text-paper/70">{CATEGORIES[slug].description}</p>
-            </div>
-          </a>
-        ))
-      }
+  <!-- 3 · Explore — flip cards -->
+  <section id="explore" class="overflow-x-clip bg-band" aria-labelledby="explore-heading">
+    <div class="mx-auto max-w-6xl px-5 py-24 md:py-28">
+      <div class="text-center" data-rise>
+        <p class="eyebrow">Explore</p>
+        <h2 id="explore-heading" class="display mt-4 text-3xl sm:text-4xl">Life at the battalion</h2>
+      </div>
+
+      <div class="deck mt-20 sm:mt-24" data-deck data-rise>
+        {
+          CATEGORY_SLUGS.map((slug, index) => (
+            <article class:list={['flip-card', { 'is-active': index === startCard }]} data-card>
+              <div class="flip-inner">
+                {/* Card back design — tap to turn this card over */}
+                <button type="button" class="flip-face flip-front" data-card-select aria-label={`Show ${CATEGORIES[slug].name}`}>
+                  <svg viewBox="0 0 250 350" class="h-full w-full" aria-hidden="true">
+                    <defs>
+                      <linearGradient id={`cb-${slug}`} x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stop-color="#27457a" />
+                        <stop offset="1" stop-color="#101f3d" />
+                      </linearGradient>
+                    </defs>
+                    <rect width="250" height="350" fill={`url(#cb-${slug})`} />
+                    {/* woven diagonal pattern */}
+                    <g stroke="#f4eedd" stroke-width="1" opacity="0.07">
+                      {Array.from({ length: 16 }, (_, i) => (
+                        <>
+                          <path d={`M${-350 + i * 40} 350 L${i * 40} 0`} />
+                          <path d={`M${-100 + i * 40} 0 L${250 + i * 40} 350`} />
+                        </>
+                      ))}
+                    </g>
+                    <rect x="9" y="9" width="232" height="332" rx="4" fill="none" stroke="#c9a24a" stroke-width="2" />
+                    <rect x="19" y="19" width="212" height="312" rx="2" fill="none" stroke="#c9a24a" stroke-width="1" opacity="0.4" />
+                    <g fill="#c9a24a">
+                      <path d="M9 9 L44 9 L9 44 Z" />
+                      <path d="M241 9 L206 9 L241 44 Z" />
+                      <path d="M9 341 L44 341 L9 306 Z" />
+                      <path d="M241 341 L206 341 L241 306 Z" />
+                    </g>
+                    {/* shield */}
+                    <path
+                      d="M125 98 L176 118 L176 178 C176 214 152 238 125 252 C98 238 74 214 74 178 L74 118 Z"
+                      fill="#0c1a33"
+                      stroke="#c9a24a"
+                      stroke-width="2.5"
+                    />
+                    <path
+                      d="M125 110 L166 126 L166 178 C166 207 147 227 125 239 C103 227 84 207 84 178 L84 126 Z"
+                      fill="none"
+                      stroke="#c9a24a"
+                      stroke-width="1"
+                      opacity="0.45"
+                    />
+                    <g transform="translate(125 172)" fill="none" stroke="#e6c877" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+                      {slug === 'events' && (
+                        <path d="M0 -26 L7.6 -8 L27 -8 L11.5 3.6 L17 22 L0 11 L-17 22 L-11.5 3.6 L-27 -8 L-7.6 -8 Z" />
+                      )}
+                      {slug === 'school' && (
+                        <path d="M0 -12 C-8 -20 -20 -20 -28 -15 L-28 15 C-20 10 -8 10 0 18 C8 10 20 10 28 15 L28 -15 C20 -20 8 -20 0 -12 Z M0 -12 L0 18" />
+                      )}
+                      {slug === 'culture' && (
+                        <path d="M0 -28 L26 0 L0 28 L-26 0 Z M0 -15 L14 0 L0 15 L-14 0 Z M0 -4 L4 0 L0 4 L-4 0 Z" />
+                      )}
+                    </g>
+                    {/* rays */}
+                    <g stroke="#c9a24a" stroke-width="2" stroke-linecap="round" opacity="0.7">
+                      <path d="M52 150 L34 142 M52 176 L32 176 M52 202 L34 210" />
+                      <path d="M198 150 L216 142 M198 176 L218 176 M198 202 L216 210" />
+                    </g>
+                  </svg>
+                  <span class="absolute inset-x-0 bottom-[11%] text-center font-condensed text-[clamp(0.6rem,1.5vw,0.85rem)] font-semibold uppercase tracking-[0.34em] text-accent-bright">
+                    {CATEGORIES[slug].name}
+                  </span>
+                </button>
+
+                {/* Content side — the whole face links to the category */}
+                <a href={`/${slug}/`} class="flip-face flip-back group">
+                  <span class="absolute left-1/2 top-0 z-10 -translate-x-1/2 rounded-b bg-accent px-3 py-0.5 font-condensed text-[0.65rem] font-semibold tracking-[0.2em] text-ink">
+                    {pad(index + 1)} / {pad(CATEGORY_SLUGS.length)}
+                  </span>
+                  <div class="relative min-h-0 flex-1 overflow-hidden">
+                    <Picture
+                      src={doorImages[slug]}
+                      alt=""
+                      formats={['webp']}
+                      fallbackFormat="jpg"
+                      widths={[320, 480, 760]}
+                      sizes="(min-width: 640px) 20rem, 17rem"
+                      loading="lazy"
+                      class="absolute inset-0 h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-700 group-hover:scale-105"
+                    />
+                  </div>
+                  <div class="border-t border-accent bg-panel px-3 py-3 text-center sm:px-4 sm:py-4">
+                    <h3 class="display text-base sm:text-xl">{CATEGORIES[slug].name}</h3>
+                    <p class="mx-auto mt-1.5 max-w-[22ch] text-[0.68rem] leading-snug text-paper/70 sm:text-xs sm:leading-relaxed">
+                      {CATEGORIES[slug].description}
+                    </p>
+                    <span class="flip-open mt-2 inline-block font-condensed text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-accent-bright">
+                      Open &rarr;
+                    </span>
+                  </div>
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="deck-controls mx-auto mt-20 flex max-w-4xl items-center justify-between gap-4 sm:mt-24">
+        <button type="button" class="deck-button" data-deck-prev aria-label="Previous card">
+          <span class="deck-arrow" aria-hidden="true">&larr;</span>
+          <span class="hidden sm:inline">Previous</span>
+        </button>
+        <div class="flex gap-3" aria-hidden="true">
+          {CATEGORY_SLUGS.map((_, index) => <span class="deck-dot" data-deck-dot aria-current={index === startCard ? 'true' : 'false'} />)}
+        </div>
+        <button type="button" class="deck-button" data-deck-next aria-label="Next card">
+          <span class="hidden sm:inline">Next</span>
+          <span class="deck-arrow" aria-hidden="true">&rarr;</span>
+        </button>
+      </div>
     </div>
   </section>
 
   <!-- 4 · Latest -->
   {
     latest && (
-      <section class="border-t border-line" aria-label="Latest story">
-        <div class="mx-auto grid max-w-6xl items-center gap-10 px-5 py-24 md:grid-cols-2 md:gap-14" data-latest>
-          <a href={postUrl(latest)} class="group block overflow-hidden bg-panel">
-            <Picture
-              src={latest.data.cover_photo}
-              alt={latest.data.cover_alt}
-              formats={['webp']}
-              fallbackFormat="jpg"
-              widths={[600, 900, 1200]}
-              sizes="(min-width: 768px) 50vw, 100vw"
-              loading="lazy"
-              class="aspect-[3/2] w-full object-cover motion-safe:transition-transform motion-safe:duration-700 group-hover:scale-[1.04]"
-            />
+      <section aria-label="Latest story">
+        <div class="mx-auto grid max-w-6xl items-center gap-16 px-5 py-24 md:grid-cols-2 md:py-32" data-rise>
+          <a href={postUrl(latest)} class="group relative mx-auto block w-full max-w-lg md:order-1">
+            <div class="frame">
+              <span class="frame-corner" /><span class="frame-corner" />
+              <span class="frame-corner" /><span class="frame-corner" />
+              <div class="overflow-hidden bg-panel">
+                <Picture
+                  src={latest.data.cover_photo}
+                  alt={latest.data.cover_alt}
+                  formats={['webp']}
+                  fallbackFormat="jpg"
+                  widths={[600, 900, 1200]}
+                  sizes="(min-width: 768px) 32rem, 90vw"
+                  loading="lazy"
+                  class="aspect-[3/2] w-full object-cover motion-safe:transition-transform motion-safe:duration-700 group-hover:scale-[1.04]"
+                />
+              </div>
+            </div>
           </a>
-          <div>
-            <p class="text-[0.7rem] uppercase tracking-[0.3em] text-accent-bright">
-              Latest · {CATEGORIES[latest.data.category].name}
-            </p>
-            <h2 class="mt-5 font-serif text-3xl leading-tight sm:text-4xl">
+          <div class="md:order-2">
+            <p class="eyebrow">Latest · {CATEGORIES[latest.data.category].name}</p>
+            <h2 class="display mt-5 text-3xl sm:text-4xl">
               <a href={postUrl(latest)} class="hover:text-accent-bright">
                 {latest.data.title}
               </a>
             </h2>
-            <p class="mt-3 text-sm text-muted">
+            <p class="mt-4 text-sm text-muted">
               {formatDate(latest.data.date)}
               {latest.data.location && ` · ${latest.data.location}`}
             </p>
-            <p class="mt-5 leading-relaxed text-paper/75">{excerpt(latest)}</p>
-            <a href={postUrl(latest)} class="mt-7 inline-block text-sm tracking-wide text-accent-bright hover:underline">
-              Read &rarr;
-            </a>
+            <p class="mt-5 max-w-md leading-relaxed text-paper/75">{excerpt(latest)}</p>
+            <a href={postUrl(latest)} class="btn btn-solid mt-9">Read the story</a>
           </div>
         </div>
       </section>

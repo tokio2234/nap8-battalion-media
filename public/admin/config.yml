@@ -41,24 +41,24 @@ collections:
               label: Identity line,
               name: identity_line,
               widget: string,
-              hint: "The single line of copy over the crossfading photos, e.g. 'Rooted in Naltoqa. Serving Nagaland.'",
+              hint: "The big headline beside the framed photo, e.g. 'Rooted in Naltoqa. Serving Nagaland.'",
             }
           - {
               label: Hero photo,
               name: hero,
               widget: image,
-              hint: "Full-screen background photo at the top of the front page. Use a large landscape image.",
+              hint: "Full-screen background photo at the top of the front page. Also used as the preview picture when a link to the site is shared. Use a large landscape image.",
             }
-          - label: Identity crossfade photos
+          - label: Framed photos
             name: identity_images
             widget: list
             min: 1
             max: 3
             field: { label: Photo, name: image, widget: image }
-            hint: "Up to 3 photos that slowly crossfade behind the identity line."
-          - { label: Events tile photo, name: door_events, widget: image }
-          - { label: School tile photo, name: door_school, widget: image }
-          - { label: Culture tile photo, name: door_culture, widget: image }
+            hint: "Up to 3 photos that slowly crossfade inside the gold frame on the front page. Portrait photos fit best."
+          - { label: Events card photo, name: door_events, widget: image, hint: "Shown on the Events flip card. Portrait photos fit best." }
+          - { label: School card photo, name: door_school, widget: image, hint: "Shown on the School flip card. Portrait photos fit best." }
+          - { label: Culture card photo, name: door_culture, widget: image, hint: "Shown on the Culture flip card. Portrait photos fit best." }
 
   - name: posts
     label: Posts

@@ -7,23 +7,32 @@
  * restyles the whole site.
  */
 @theme {
-  /* Deep charcoal page background */
-  --color-ink: #101112;
-  /* Slightly lifted panel background */
-  --color-panel: #17181a;
-  /* Off-white text */
-  --color-paper: #f1ede4;
-  /* Muted grey for dates and secondary text */
-  --color-muted: #9b968b;
-  /* Hairline borders and dividers */
-  --color-line: #2a2b2e;
-  /* Sumi-shawl vermillion — used for dividers, hovers, and surfaces */
-  --color-accent: #a61b1b;
-  /* Brightened vermillion for text links (passes WCAG AA on the dark background) */
-  --color-accent-bright: #d9564a;
+  /* Police palette: navy, khaki, gold. */
 
-  --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  /* Deep navy page background */
+  --color-ink: #0a1324;
+  /* Slightly lifted panel background */
+  --color-panel: #111e38;
+  /* Lighter navy for full-width feature bands (the flip-card shelf) */
+  --color-band: #15274a;
+  /* Warm off-white text */
+  --color-paper: #f4eedd;
+  /* Muted blue-grey for dates and secondary text */
+  --color-muted: #9aa5ba;
+  /* Hairline borders and dividers */
+  --color-line: #233352;
+  /* Khaki — eyebrow labels and quiet ornament */
+  --color-khaki: #bfae84;
+  /* Gold — dividers, frames, and filled surfaces (use dark text on it) */
+  --color-accent: #c9a24a;
+  /* Lighter gold for text links (passes WCAG AA on the navy background) */
+  --color-accent-bright: #e6c877;
+
+  /* Display face for headings (single weight) */
+  --font-serif: "Marcellus", Georgia, "Times New Roman", serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Condensed caps for navigation, eyebrows, and buttons */
+  --font-condensed: "Barlow Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
 }
 
 /* ---------------------------------------------------------------- base */
@@ -41,7 +50,7 @@ body {
 
 ::selection {
   background-color: var(--color-accent);
-  color: var(--color-paper);
+  color: var(--color-ink);
 }
 
 :focus-visible {
@@ -56,11 +65,268 @@ body {
   top: 0;
   z-index: 100;
   background: var(--color-accent);
-  color: var(--color-paper);
+  color: var(--color-ink);
   padding: 0.6rem 1rem;
 }
 .skip-link:focus {
   left: 0;
+}
+
+/* ------------------------------------------------- shared type + buttons */
+
+/* Small condensed caps label above a heading */
+.eyebrow {
+  font-family: var(--font-condensed);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--color-khaki);
+}
+
+/* Big uppercase display heading */
+.display {
+  font-family: var(--font-serif);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.08;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.75rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-family: var(--font-condensed);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+.btn-solid {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+.btn-solid:hover {
+  background: var(--color-accent-bright);
+}
+.btn-outline {
+  border-color: color-mix(in srgb, var(--color-paper) 55%, transparent);
+  color: var(--color-paper);
+}
+.btn-outline:hover {
+  border-color: var(--color-accent-bright);
+  color: var(--color-accent-bright);
+}
+
+/* Gold picture frame with diamond corners (homepage feature photos) */
+.frame {
+  position: relative;
+  padding: 0.6rem;
+  background: var(--color-panel);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 70%, transparent);
+}
+.frame::before {
+  content: "";
+  position: absolute;
+  inset: -0.55rem;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 28%, transparent);
+  pointer-events: none;
+}
+.frame-corner {
+  position: absolute;
+  width: 0.7rem;
+  height: 0.7rem;
+  background: var(--color-accent);
+  transform: rotate(45deg);
+  z-index: 1;
+}
+.frame-corner:nth-of-type(1) { top: -0.35rem; left: -0.35rem; }
+.frame-corner:nth-of-type(2) { top: -0.35rem; right: -0.35rem; }
+.frame-corner:nth-of-type(3) { bottom: -0.35rem; left: -0.35rem; }
+.frame-corner:nth-of-type(4) { bottom: -0.35rem; right: -0.35rem; }
+
+/* Drifting points of light (decorative) */
+.firefly {
+  position: absolute;
+  width: var(--size, 6px);
+  height: var(--size, 6px);
+  border-radius: 9999px;
+  background: #f6d98e;
+  box-shadow: 0 0 10px 3px rgb(240 196 110 / 0.55);
+  opacity: 0.75;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .firefly {
+    animation: firefly var(--dur, 7s) ease-in-out var(--delay, 0s) infinite alternate;
+  }
+  @keyframes firefly {
+    0% {
+      transform: translate(0, 0);
+      opacity: 0.25;
+    }
+    50% {
+      opacity: 0.95;
+    }
+    100% {
+      transform: translate(var(--dx, 14px), var(--dy, -26px));
+      opacity: 0.4;
+    }
+  }
+}
+
+/* ------------------------------------------------- homepage flip cards
+ * Three category cards on a "shelf". The active card is larger and turned
+ * over to show its photo and description; the others show the card back.
+ * Without JavaScript every card simply shows its content side.
+ */
+.deck {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: clamp(1rem, 4vw, 3rem);
+  max-width: 56rem;
+  margin-inline: auto;
+  perspective: 1600px;
+}
+.deck::before {
+  content: "";
+  position: absolute;
+  inset: 16% -6%;
+  background: rgb(5 10 22 / 0.28);
+  border-top: 1px solid color-mix(in srgb, var(--color-paper) 8%, transparent);
+  box-shadow: 0 18px 30px -18px rgb(0 0 0 / 0.6);
+}
+.flip-card {
+  position: relative;
+  aspect-ratio: 5 / 7;
+}
+.flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+.flip-face {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  border-radius: 8px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: 0 14px 30px -12px rgb(0 0 0 / 0.65);
+}
+.flip-front {
+  cursor: pointer;
+}
+.flip-back {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-panel);
+  border: 1px solid var(--color-accent);
+}
+.flip-back:hover .flip-open {
+  color: var(--color-paper);
+}
+
+/* No JavaScript: content side only, no turning */
+html:not(.js) .flip-front {
+  display: none;
+}
+
+.js .flip-card {
+  transform: scale(0.88);
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.js .flip-card.is-active {
+  transform: scale(1.1);
+  z-index: 1;
+}
+.js .flip-inner {
+  transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.js .flip-back {
+  transform: rotateY(180deg);
+}
+.js .flip-card.is-active .flip-inner {
+  transform: rotateY(180deg);
+}
+
+.deck-dot {
+  width: 2.25rem;
+  height: 2px;
+  background: color-mix(in srgb, var(--color-paper) 25%, transparent);
+  transition: background-color 0.3s;
+}
+.deck-dot[aria-current="true"] {
+  background: var(--color-accent);
+}
+.deck-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-family: var(--font-condensed);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-paper) 80%, transparent);
+  cursor: pointer;
+}
+.deck-button .deck-arrow {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 4px;
+  background: var(--color-accent);
+  color: var(--color-ink);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.deck-button:hover {
+  color: var(--color-accent-bright);
+}
+html:not(.js) .deck-controls {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  /* Phones: one card at a time */
+  .deck {
+    grid-template-columns: minmax(0, 17rem);
+    justify-content: center;
+  }
+  .deck::before {
+    inset: 22% -1.25rem;
+  }
+  .js .flip-card {
+    display: none;
+  }
+  .js .flip-card.is-active {
+    display: block;
+    transform: none;
+  }
+  html:not(.js) .deck {
+    gap: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .flip-card,
+  .js .flip-inner {
+    transition: none;
+  }
 }
 
 /* ------------------------------------------------- scroll reveals
@@ -99,6 +365,20 @@ body {
  */
 .nav-toggle {
   display: none;
+}
+.site-nav {
+  font-family: var(--font-condensed);
+}
+@media (min-width: 640px) {
+  /* The last link (Gallery) is drawn as an outlined button */
+  .nav-cta {
+    padding: 0.45rem 1rem;
+    border: 1px solid color-mix(in srgb, var(--color-paper) 55%, transparent);
+    border-radius: 4px;
+  }
+  .nav-cta:hover {
+    border-color: var(--color-accent-bright);
+  }
 }
 @media (max-width: 639px) {
   .js .nav-toggle {

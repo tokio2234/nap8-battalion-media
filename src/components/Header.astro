@@ -12,9 +12,10 @@ const { transparent = false } = Astro.props;
 
 const links = [
   ...CATEGORY_SLUGS.map((slug) => ({ href: `/${slug}/`, label: CATEGORIES[slug].name })),
-  { href: '/gallery/', label: 'Gallery' },
   { href: '/about/', label: 'About' },
-];
+  // Last link is drawn as an outlined button on wide screens (.nav-cta in global.css).
+  { href: '/gallery/', label: 'Gallery', cta: true },
+] as { href: string; label: string; cta?: boolean }[];
 
 const currentPath = Astro.url.pathname;
 const isActive = (href: string) => currentPath === href || currentPath.startsWith(href);
@@ -26,8 +27,8 @@ const isActive = (href: string) => currentPath === href || currentPath.startsWit
     ? 'absolute inset-x-0 top-0 z-20'
     : 'border-b border-line bg-ink'}`}
 >
-  <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-8 gap-y-2 px-5 py-5 sm:items-baseline">
-    <a href="/" class="font-serif text-lg tracking-wide text-paper hover:text-accent-bright">
+  <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-8 gap-y-2 px-5 py-5">
+    <a href="/" class="font-serif text-lg uppercase tracking-[0.12em] text-paper hover:text-accent-bright">
       {SITE.shortTitle}
     </a>
     <!-- Phone-only menu button (shown by global.css when JS is running;
@@ -48,7 +49,7 @@ const isActive = (href: string) => currentPath === href || currentPath.startsWit
       </svg>
     </button>
     <nav id="site-nav" class="site-nav" aria-label="Main navigation">
-      <ul class="flex flex-wrap gap-x-5 gap-y-1 text-[0.72rem] uppercase tracking-[0.18em]">
+      <ul class="flex flex-wrap items-center gap-x-7 gap-y-1 text-[0.82rem] font-medium uppercase tracking-[0.22em]">
         {
           links.map((link) => (
             <li>
@@ -56,8 +57,8 @@ const isActive = (href: string) => currentPath === href || currentPath.startsWit
                 href={link.href}
                 aria-current={isActive(link.href) ? 'page' : undefined}
                 class={`transition-colors hover:text-accent-bright ${
-                  isActive(link.href) ? 'text-accent-bright' : 'text-paper/75'
-                }`}
+                  isActive(link.href) ? 'text-accent-bright' : 'text-paper/85'
+                } ${link.cta ? 'nav-cta' : ''}`}
               >
                 {link.label}
               </a>
